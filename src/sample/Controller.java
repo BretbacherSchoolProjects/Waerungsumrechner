@@ -29,24 +29,17 @@ public class Controller {
     void handle_convert(MouseEvent event) {
         double eur=-1;
         double yen=-1;
+        CurrencyConverter converter=new CurrencyConverter();
 
-        if ((!txta_eur.getText().equals("") && txta_yen.getText().equals("")) || (!txta_eur.getText().equals("") && !txta_yen.getText().equals(""))){
-            try{
-                eur=Double.parseDouble(txta_eur.getText());
-                yen=eur*124;
-            }catch (Exception ignored){
-
+        try {
+            if ((!txta_eur.getText().equals("") && txta_yen.getText().equals("")) || (!txta_eur.getText().equals("") && !txta_yen.getText().equals(""))) {
+                yen=converter.convertEurToYen(Double.parseDouble(txta_eur.getText()));
+                txta_yen.setText(String.format("%.2f", yen));
+            } else if (txta_eur.getText().equals("") && !txta_yen.getText().equals("")) {
+                eur = converter.convertYenToEur(Double.parseDouble(txta_yen.getText()));
+                txta_eur.setText(String.format("%.2f", eur));
             }
-        }
-        else if (txta_eur.getText().equals("") && !txta_yen.getText().equals("")){
-            try{
-                yen=Double.parseDouble(txta_yen.getText());
-                eur=yen/124;
-            }catch (Exception ignored){
-
-            }
-        }
-        if (eur!=-1 && yen!=-1) {
+        }catch(Exception ignored){
             txta_eur.setText("" + eur);
             txta_yen.setText("" + yen);
         }

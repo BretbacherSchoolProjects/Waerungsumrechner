@@ -1,48 +1,47 @@
 package sample;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-
-import java.text.NumberFormat;
 
 public class Controller {
 
-    @FXML
-    private Label eur;
-
+    //Variables
     @FXML
     private TextArea txta_eur;
 
     @FXML
-    private Button convert;
+    CurrencyConverter converter;
 
     @FXML
-    private Label yen;
+    private ChoiceBox<String> cb_convert;
 
     @FXML
-    private TextArea txta_yen;
+    private TextArea txta_convert;
 
+    //Handler
     @FXML
     void handle_convert(MouseEvent event) {
-        double eur=-1;
-        double yen=-1;
-        CurrencyConverter converter=new CurrencyConverter();
-
-        try {
-            if ((!txta_eur.getText().equals("") && txta_yen.getText().equals("")) || (!txta_eur.getText().equals("") && !txta_yen.getText().equals(""))) {
-                yen=converter.convertEurToYen(Double.parseDouble(txta_eur.getText()));
-                txta_yen.setText(String.format("%.2f", yen));
-            } else if (txta_eur.getText().equals("") && !txta_yen.getText().equals("")) {
-                eur = converter.convertYenToEur(Double.parseDouble(txta_yen.getText()));
-                txta_eur.setText(String.format("%.2f", eur));
+        if (!txta_eur.getText().equals("")) {
+            try {
+                txta_convert.setText(String.format("%.4f", converter.convert(Double.parseDouble(txta_eur.getText()), cb_convert.getValue())));
+            } catch (Exception e) {
+                txta_eur.setText("-1");
+                txta_convert.setText("-1");
             }
-        }catch(Exception ignored){
-            txta_eur.setText("" + eur);
-            txta_yen.setText("" + yen);
         }
-
     }
+
+    //Initializer
+    @FXML
+    public void initialize() {
+        converter=new CurrencyConverter();
+
+        cb_convert.getItems().add("Yen");
+        cb_convert.getItems().add("US Dollar");
+        cb_convert.getItems().add("Danish Krone");
+        cb_convert.getItems().add("Croatian Kuna");
+        cb_convert.getItems().add("North Korean Won");
+    }
+
 }
